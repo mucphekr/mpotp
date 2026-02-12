@@ -1,0 +1,1316 @@
+<!doctype html>
+
+<html lang="vi">
+
+  <head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Nhận mã xác thực Google OTP</title>
+
+    <style>
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #111;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #e0e0e0;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .card {
+        background: #1a1a1a;
+        padding: 25px 20px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid #2a2a2a;
+      }
+
+      .header {
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 20px;
+        color: #e0e0e0;
+        margin-bottom: 6px;
+        font-weight: 700;
+      }
+
+      .subtitle {
+        color: #888;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .input-group {
+        margin-bottom: 18px;
+        text-align: left;
+      }
+
+      label {
+        display: block;
+        color: #888;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      input, textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        background: #222;
+        color: #e0e0e0;
+      }
+
+      textarea {
+        min-height: 70px;
+        line-height: 1.5;
+      }
+
+      input:focus, textarea:focus {
+        outline: none;
+        border-color: #4A90E2;
+      }
+
+      input::placeholder, textarea::placeholder {
+        color: #555;
+      }
+
+      input.error, textarea.error {
+        border-color: #e53e3e;
+      }
+
+      .error-message {
+        color: #e53e3e;
+        font-size: 13px;
+        margin-top: -20px;
+        margin-bottom: 15px;
+        text-align: left;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: #4A90E2;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+
+      button:hover {
+        background: #3a7bc8;
+      }
+
+      button:active {
+        background: #2d6bb5;
+      }
+
+      .codes-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .code-display {
+        background: #222;
+        border-radius: 8px;
+        padding: 10px 8px;
+        overflow: hidden;
+        box-sizing: border-box;
+        position: relative;
+        border: 1px solid #333;
+      }
+
+      .code-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+
+      .code-item-label {
+        font-size: 10px;
+        color: #888;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        flex: 1;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: calc(100% - 26px);
+      }
+
+      .remove-btn {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: none;
+        background: #e53e3e;
+        color: white;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: 0;
+        line-height: 1;
+      }
+
+      .remove-btn:hover {
+        background: #c53030;
+      }
+
+      .code-label-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+
+      .code-label {
+        font-size: 10px;
+        color: #888;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0;
+      }
+
+      .code-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+        max-width: 100%;
+      }
+
+      .code {
+        font-size: 24px;
+        letter-spacing: 3px;
+        font-weight: 700;
+        color: #e0e0e0;
+        font-family: "Courier New", monospace;
+        line-height: 1;
+        display: inline-block;
+        max-width: 100%;
+        word-break: break-all;
+        flex-shrink: 1;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .code:hover {
+        color: #4A90E2;
+      }
+
+      .code.copied {
+        color: #48bb78;
+      }
+
+      .timer-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .timer-label {
+        font-size: 11px;
+        color: #888;
+      }
+
+      .timer-circle {
+        position: relative;
+        width: 30px;
+        height: 30px;
+      }
+
+      .timer-bg {
+        fill: none;
+        stroke: #333;
+        stroke-width: 2.5;
+      }
+
+      .timer-progress {
+        fill: none;
+        stroke: #4A90E2;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+        transition: stroke-dashoffset 1s linear;
+      }
+
+      .timer-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 11px;
+        font-weight: 700;
+        color: #4A90E2;
+      }
+
+      .info-box {
+        background: #222;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        border: 1px solid #333;
+      }
+
+      .info-text {
+        font-size: 13px;
+        color: #888;
+        line-height: 1.6;
+      }
+
+      .info-icon {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        background: #4A90E2;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 18px;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 5px;
+      }
+
+      .creator-note {
+        text-align: center;
+        margin-top: 30px;
+        padding: 15px;
+        font-size: 14px;
+        color: #888;
+      }
+
+      .guide-link {
+        display: block;
+        margin-top: 10px;
+        color: #4A90E2;
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .guide-link:hover {
+        color: #3a7bc8;
+        text-decoration: underline;
+      }
+
+      /* Custom Modal Styles */
+      .custom-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+      }
+
+      .custom-modal {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 0;
+        max-width: 400px;
+        width: 90%;
+        border: 1px solid #333;
+        overflow: hidden;
+      }
+
+      .custom-modal-header {
+        background: #222;
+        padding: 20px;
+        color: #e0e0e0;
+        font-weight: 600;
+        font-size: 16px;
+        border-bottom: 1px solid #333;
+      }
+
+      .custom-modal-body {
+        padding: 24px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .custom-modal-icon {
+        font-size: 32px;
+        flex-shrink: 0;
+      }
+
+      .custom-modal-message {
+        flex: 1;
+        color: #ccc;
+        line-height: 1.6;
+        font-size: 15px;
+      }
+
+      .custom-modal-footer {
+        padding: 16px 24px;
+        border-top: 1px solid #333;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .custom-modal-button {
+        background: #4A90E2;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .custom-modal-button:hover {
+        background: #3a7bc8;
+      }
+
+      /* Guide Modal Styles */
+      .guide-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10001;
+        padding: 20px;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .guide-modal {
+        background: #1a1a1a;
+        border-radius: 12px;
+        max-width: 95%;
+        max-height: 90vh;
+        width: 950px;
+        border: 1px solid #333;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 10;
+      }
+
+      .guide-modal-header {
+        background: #222;
+        padding: 18px 24px;
+        color: #e0e0e0;
+        font-weight: 700;
+        font-size: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #333;
+      }
+
+      .guide-modal-close {
+        background: #333;
+        border: none;
+        color: #e0e0e0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .guide-modal-close:hover {
+        background: #444;
+      }
+
+      .guide-modal-body {
+        padding: 24px;
+        overflow-y: auto;
+        flex: 1;
+        background: #161616;
+      }
+
+      .guide-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .guide-step {
+        background: #1a1a1a;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #333;
+      }
+
+      .guide-step-header {
+        background: #222;
+        padding: 12px 16px;
+        color: #e0e0e0;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid #333;
+      }
+
+      .guide-step-number {
+        background: #333;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+        color: #4A90E2;
+      }
+
+      .guide-step-content {
+        padding: 16px;
+      }
+
+      .guide-step-image {
+        background: #222;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 12px;
+        border: 1px solid #333;
+      }
+
+      .guide-input-demo {
+        background: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 12px 16px;
+        color: #e0e0e0;
+        font-size: 14px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .guide-input-label {
+        color: #888;
+        font-size: 12px;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .guide-step-desc {
+        color: #4A90E2;
+        font-size: 15px;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 8px;
+      }
+
+      .guide-btn-demo {
+        background: #4A90E2;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        color: white;
+        font-weight: 600;
+        font-size: 13px;
+        margin-top: 12px;
+        width: 100%;
+      }
+
+      .guide-checkbox-demo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #888;
+        font-size: 13px;
+        margin-top: 12px;
+      }
+
+      .guide-checkbox-demo input {
+        width: 18px;
+        height: 18px;
+        accent-color: #4A90E2;
+      }
+
+      .guide-otp-option {
+        background: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #e0e0e0;
+        font-size: 13px;
+      }
+
+      .guide-otp-option-icon {
+        font-size: 20px;
+      }
+
+      .guide-otp-code {
+        font-family: 'Courier New', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: #e0e0e0;
+        letter-spacing: 4px;
+        text-align: center;
+        padding: 15px;
+        background: #2a2a2a;
+        border-radius: 8px;
+        border: 1px solid #333;
+      }
+
+      @media (max-width: 768px) {
+        .guide-modal {
+          width: 100%;
+          max-height: 95vh;
+          border-radius: 12px;
+        }
+
+        .guide-steps {
+          grid-template-columns: 1fr;
+        }
+
+        .guide-modal-header {
+          padding: 14px 18px;
+          font-size: 16px;
+        }
+
+        .guide-modal-body {
+          padding: 16px;
+        }
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <!-- Guide Modal -->
+    <div id="guideModal" class="guide-modal-overlay" style="display: none;">
+      <div class="guide-modal">
+        <div class="guide-modal-header">
+          <span>Hướng dẫn nhận mã xác thực Google OTP</span>
+          <button class="guide-modal-close" onclick="closeGuideModal()">×</button>
+        </div>
+        <div class="guide-modal-body">
+          <div class="guide-steps">
+            <!-- Step 1: Email Input -->
+            <div class="guide-step">
+              <div class="guide-step-header">
+                <span class="guide-step-number">1</span>
+                <span>Nhập email</span>
+              </div>
+              <div class="guide-step-content">
+                <div class="guide-step-image">
+                  <div class="guide-input-label">Email hoặc số điện thoại</div>
+                  <div class="guide-input-demo">example@gmail.com</div>
+                </div>
+                <div class="guide-step-desc">Nhập email</div>
+              </div>
+            </div>
+
+            <!-- Step 2: Password Input -->
+            <div class="guide-step">
+              <div class="guide-step-header">
+                <span class="guide-step-number">2</span>
+                <span>Nhập mật khẩu</span>
+              </div>
+              <div class="guide-step-content">
+                <div class="guide-step-image">
+                  <div class="guide-input-label">Nhập mật khẩu</div>
+                  <div class="guide-input-demo">••••••••</div>
+                  <div class="guide-checkbox-demo">
+                    <input type="checkbox" checked disabled>
+                    <span>Hiển thị mật khẩu</span>
+                  </div>
+                </div>
+                <div class="guide-step-desc">Nhập mật khẩu</div>
+              </div>
+            </div>
+
+            <!-- Step 3: OTP Selection -->
+            <div class="guide-step">
+              <div class="guide-step-header">
+                <span class="guide-step-number">3</span>
+                <span>Chọn mã xác thực OTP</span>
+              </div>
+              <div class="guide-step-content">
+                <div class="guide-step-image">
+                  <div style="color: #888; font-size: 13px; margin-bottom: 12px;">Chọn phương thức đăng nhập.</div>
+                  <div class="guide-otp-option" style="opacity: 0.5;">
+                    <span class="guide-otp-option-icon">📱</span>
+                    <span>Nhấn Có trên điện thoại hoặc máy tính bảng.<br><small style="color: #666;">Không thể kết nối thiết bị.</small></span>
+                  </div>
+                  <div class="guide-otp-option" style="border-color: #4A90E2; border-width: 2px; background: rgba(74, 144, 226, 0.15);">
+                    <span class="guide-otp-option-icon">🔢</span>
+                    <span>Nhận mã xác thực từ ứng dụng <strong style="color: #4A90E2;">Google OTP</strong></span>
+                  </div>
+                  <div class="guide-otp-option" style="opacity: 0.5;">
+                    <span class="guide-otp-option-icon">❓</span>
+                    <span>Thử cách khác</span>
+                  </div>
+                </div>
+                <div class="guide-step-desc">Chọn mã xác thực OTP</div>
+              </div>
+            </div>
+
+            <!-- Step 4: Get OTP -->
+            <div class="guide-step">
+              <div class="guide-step-header">
+                <span class="guide-step-number">4</span>
+                <span>Nhập OTP</span>
+              </div>
+              <div class="guide-step-content">
+                <div class="guide-step-image">
+                  <div style="text-align: center; color: #e0e0e0; font-size: 14px; margin-bottom: 8px;">Nhận mã xác thực Google OTP</div>
+                  <div style="color: #888; font-size: 11px; text-align: center; margin-bottom: 12px;">Xác minh mã Google OTP an toàn</div>
+                  <div class="guide-input-label">Nhập OTP</div>
+                  <div class="guide-input-demo" style="font-size: 12px;">jTa4 73de wpuf 2yln 4wab c2vj jnfu avha</div>
+                  <div class="guide-btn-demo">Xác nhận mã xác thực</div>
+                  <div style="margin-top: 12px;">
+                    <div class="guide-otp-code">300726</div>
+                  </div>
+                </div>
+                <div class="guide-step-desc">Xác nhận OTP</div>
+              </div>
+            </div>
+
+            <!-- Step 5: Enter Code -->
+            <div class="guide-step">
+              <div class="guide-step-header">
+                <span class="guide-step-number">5</span>
+                <span>Nhập mã xác thực</span>
+              </div>
+              <div class="guide-step-content">
+                <div class="guide-step-image">
+                  <div style="color: #e0e0e0; font-size: 15px; margin-bottom: 4px;">Xác thực 2 bước</div>
+                  <div style="color: #888; font-size: 12px; margin-bottom: 16px;">Nhận mã xác thực từ ứng dụng <strong style="color: #4A90E2;">Google OTP</strong></div>
+                  <div class="guide-input-label">Nhập mã</div>
+                  <div class="guide-input-demo">300726</div>
+                  <div class="guide-checkbox-demo">
+                    <input type="checkbox" checked disabled>
+                    <span>Không yêu cầu lại trên thiết bị này</span>
+                  </div>
+                  <div style="display: flex; gap: 10px; margin-top: 12px;">
+                    <button style="flex: 1; background: #333; border: 1px solid #444; border-radius: 8px; padding: 10px; color: #888; font-size: 12px;">Thử cách khác</button>
+                    <button style="flex: 1; background: #4A90E2; border: none; border-radius: 8px; padding: 10px; color: white; font-size: 12px; font-weight: 600;">Tiếp theo</button>
+                  </div>
+                </div>
+                <div class="guide-step-desc">Nhập mã xác thực</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Modal -->
+
+    <div id="customModal" class="custom-modal-overlay" style="display: none;">
+
+      <div class="custom-modal">
+
+        <div class="custom-modal-header" id="modalHeader">
+
+          <span id="modalTitle">Thông báo</span>
+
+        </div>
+
+        <div class="custom-modal-body">
+
+          <div class="custom-modal-icon" id="modalIcon">⚠️</div>
+
+          <div class="custom-modal-message" id="modalMessage"></div>
+
+        </div>
+
+        <div class="custom-modal-footer">
+
+          <button class="custom-modal-button" onclick="closeCustomModal()">OK</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="container">
+
+      <div class="card">
+
+        <div class="header">
+
+          <h1>Nhận mã xác thực Google OTP</h1>
+
+          <p class="subtitle">Xác minh mã Google OTP an toàn</p>
+
+        </div>
+
+
+
+        <div class="input-group">
+
+          <label for="secret">Nhập OTP</label>
+
+          <textarea
+
+            id="secret"
+
+            placeholder="Nhập khóa bảo mật 2FA&#10;"
+
+            autocomplete="off"
+
+            rows="3"
+
+          ></textarea>
+
+        </div>
+
+        <div class="error-message" id="error-message">Vui lòng nhập khóa OTP 2FA đúng định dạng</div>
+
+
+
+        <button onclick="start()">Xác nhận mã xác thực</button>
+
+
+
+        <div class="codes-container" id="codes-container"></div>
+
+
+
+        <div class="info-box">
+
+          <div class="info-text">
+
+            <span class="info-icon">i</span>
+
+            Mã sẽ tự động làm mới sau mỗi 30 giây.
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="creator-note">
+
+            <a class="guide-link" onclick="openGuideModal()">Hướng dẫn nhận mã xác thực Google OTP</a>
+
+            <a class="guide-link" href="https://t.me/mucphemmo_bot" target="_blank">Bot Telegram oder tự động → Click</a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <script>
+
+      // Guide Modal Functions
+      function openGuideModal() {
+        const modal = document.getElementById('guideModal');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeGuideModal() {
+        const modal = document.getElementById('guideModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      document.getElementById('guideModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeGuideModal();
+        }
+      });
+
+      // Custom Modal Functions
+
+      function showCustomModal(title, message, icon = '⚠️') {
+        const modal = document.getElementById('customModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalIcon = document.getElementById('modalIcon');
+
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modalIcon.textContent = icon;
+        modal.style.display = 'flex';
+      }
+
+      function closeCustomModal() {
+        const modal = document.getElementById('customModal');
+        modal.style.display = 'none';
+      }
+
+      document.getElementById('customModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeCustomModal();
+        }
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeCustomModal();
+          closeGuideModal();
+        }
+      });
+
+      let intervals = {};
+      let activeSecrets = {};
+
+      function checkSecurityRequirements() {
+        const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        const hasCrypto = typeof crypto !== 'undefined' && crypto.subtle;
+
+        if (!isSecureContext) {
+          const errorMsg = 'Ứng dụng này yêu cầu kết nối HTTPS. Vì lý do bảo mật, không hoạt động trên HTTP.';
+          const domainName = window.location.hostname || 'localhost';
+          showCustomModal(domainName + ' cho biết', errorMsg, '⚠️');
+          console.error('HTTPS required. Current protocol:', location.protocol);
+          return false;
+        }
+
+        if (!hasCrypto) {
+          const errorMsg = 'Trình duyệt không hỗ trợ chức năng mã hóa. Vui lòng sử dụng trình duyệt mới nhất.';
+          showCustomModal('Thông báo', errorMsg, '⚠️');
+          console.error('crypto.subtle not available');
+          return false;
+        }
+
+        return true;
+      }
+
+      function isValidBase32(secret) {
+        const base32Regex = /^[A-Z2-7]+=*$/;
+        const cleaned = secret.replace(/\s/g, '').toUpperCase();
+        return cleaned.length >= 16 && base32Regex.test(cleaned);
+      }
+
+      function parseSecrets(input) {
+        const lines = input
+          .split(/[\n,;]/)
+          .map(line => line.trim().toUpperCase().replace(/\s/g, ''))
+          .filter(line => line.length > 0);
+        return lines;
+      }
+
+      function base32ToBytes(base32) {
+        const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        base32 = base32.replace(/=+$/, "").toUpperCase();
+
+        let bits = "";
+        for (let char of base32) {
+          const val = alphabet.indexOf(char);
+          if (val === -1) return null;
+          bits += val.toString(2).padStart(5, "0");
+        }
+
+        const bytes = [];
+        for (let i = 0; i + 8 <= bits.length; i += 8) {
+          bytes.push(parseInt(bits.substr(i, 8), 2));
+        }
+
+        return new Uint8Array(bytes);
+      }
+
+      async function generateTOTP(secret) {
+        try {
+          if (!checkSecurityRequirements()) {
+            throw new Error('Security requirements not met');
+          }
+
+          const bytes = base32ToBytes(secret);
+          if (!bytes || bytes.length === 0) {
+            throw new Error('Invalid secret key format');
+          }
+
+          const key = await crypto.subtle.importKey(
+            "raw",
+            bytes,
+            { name: "HMAC", hash: "SHA-1" },
+            false,
+            ["sign"],
+          );
+
+          const counter = Math.floor(Date.now() / 1000 / 30);
+          const buffer = new ArrayBuffer(8);
+          const view = new DataView(buffer);
+          view.setUint32(4, counter);
+
+          const hmac = await crypto.subtle.sign("HMAC", key, buffer);
+          const hmacBytes = new Uint8Array(hmac);
+
+          const offset = hmacBytes[19] & 0xf;
+          const code =
+            ((hmacBytes[offset] & 0x7f) << 24) |
+            ((hmacBytes[offset + 1] & 0xff) << 16) |
+            ((hmacBytes[offset + 2] & 0xff) << 8) |
+            (hmacBytes[offset + 3] & 0xff);
+
+          return (code % 1000000).toString().padStart(6, "0");
+        } catch (error) {
+          console.error('Error in generateTOTP:', error);
+          throw error;
+        }
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // r=13 => circumference = 2 * PI * 13 = 81.68
+      const TIMER_CIRCUMFERENCE = 2 * Math.PI * 13;
+
+      function createCodeDisplay(secret, index) {
+        const container = document.getElementById("codes-container");
+        const secretId = `secret-${index}`;
+
+        const codeDisplay = document.createElement("div");
+        codeDisplay.className = "code-display";
+        codeDisplay.id = `code-display-${index}`;
+
+        const shortSecret = secret.length > 20 ? secret.substring(0, 20) + "..." : secret;
+        const escapedSecret = escapeHtml(secret);
+        const escapedShortSecret = escapeHtml(shortSecret);
+
+        codeDisplay.innerHTML = `
+          <div class="code-item-header">
+            <div class="code-item-label" title="${escapedSecret}">${escapedShortSecret}</div>
+            <button class="remove-btn" data-secret-id="${secretId}" title="Xóa">×</button>
+          </div>
+          <div class="code-label-wrapper">
+            <div class="code-label">Mã xác thực</div>
+            <div class="timer-container">
+              <span class="timer-label">Làm mới sau</span>
+              <div class="timer-circle">
+                <svg width="30" height="30">
+                  <circle class="timer-bg" cx="15" cy="15" r="13"></circle>
+                  <circle
+                    class="timer-progress"
+                    id="progress-${index}"
+                    cx="15"
+                    cy="15"
+                    r="13"
+                    stroke-dasharray="${TIMER_CIRCUMFERENCE}"
+                    stroke-dashoffset="0"
+                  ></circle>
+                </svg>
+                <div class="timer-text" id="timer-${index}">30</div>
+              </div>
+            </div>
+          </div>
+          <div class="code-wrapper">
+            <div class="code" id="code-${index}">━━━━━━</div>
+          </div>
+        `;
+
+        container.appendChild(codeDisplay);
+
+        const codeElement = document.getElementById(`code-${index}`);
+        codeElement.addEventListener("click", () => copyCode(index));
+
+        const removeBtn = codeDisplay.querySelector('.remove-btn');
+        removeBtn.addEventListener("click", () => {
+          const btnSecretId = removeBtn.getAttribute('data-secret-id');
+          removeSecret(btnSecretId);
+        });
+
+        activeSecrets[secretId] = secret;
+      }
+
+      function removeSecret(secretId) {
+        const indexMatch = secretId.match(/^secret-(\d+)$/);
+        if (!indexMatch) {
+          console.error("Invalid secretId format:", secretId);
+          return;
+        }
+        const index = parseInt(indexMatch[1], 10);
+
+        if (intervals[secretId]) {
+          clearInterval(intervals[secretId]);
+          delete intervals[secretId];
+        }
+
+        delete activeSecrets[secretId];
+
+        const codeDisplay = document.getElementById(`code-display-${index}`);
+        if (codeDisplay) {
+          codeDisplay.remove();
+        }
+      }
+
+      async function start() {
+        const secretInput = document.getElementById("secret");
+        const errorMessage = document.getElementById("error-message");
+        const inputValue = secretInput.value.trim();
+
+        secretInput.classList.remove("error");
+        errorMessage.classList.remove("show");
+
+        if (!checkSecurityRequirements()) {
+          errorMessage.textContent = 'Yêu cầu kết nối HTTPS. Ứng dụng này chỉ hoạt động trên HTTPS vì lý do bảo mật.';
+          errorMessage.classList.add("show");
+          secretInput.classList.add("error");
+          return;
+        }
+
+        if (!inputValue) {
+          secretInput.classList.add("error");
+          errorMessage.textContent = 'Vui lòng nhập khóa OTP 2FA đúng định dạng';
+          errorMessage.classList.add("show");
+          return;
+        }
+
+        const secrets = parseSecrets(inputValue);
+
+        if (secrets.length === 0) {
+          secretInput.classList.add("error");
+          errorMessage.textContent = 'Vui lòng nhập khóa OTP 2FA đúng định dạng';
+          errorMessage.classList.add("show");
+          return;
+        }
+
+        const validSecrets = [];
+        for (const secret of secrets) {
+          if (isValidBase32(secret)) {
+            const testBytes = base32ToBytes(secret);
+            if (testBytes && testBytes.length > 0) {
+              validSecrets.push(secret);
+            }
+          }
+        }
+
+        if (validSecrets.length === 0) {
+          secretInput.classList.add("error");
+          errorMessage.textContent = 'Vui lòng nhập khóa OTP 2FA đúng định dạng';
+          errorMessage.classList.add("show");
+          return;
+        }
+
+        Object.values(intervals).forEach(interval => clearInterval(interval));
+        intervals = {};
+        activeSecrets = {};
+
+        const container = document.getElementById("codes-container");
+        container.innerHTML = "";
+
+        try {
+          for (let i = 0; i < validSecrets.length; i++) {
+            const secret = validSecrets[i];
+            const secretId = `secret-${i}`;
+
+            createCodeDisplay(secret, i);
+
+            await update(secret, i);
+
+            intervals[secretId] = setInterval(() => {
+              update(secret, i);
+            }, 1000);
+          }
+        } catch (error) {
+          console.error('Error in start():', error);
+          secretInput.classList.add("error");
+          if (error.message && error.message.includes('Security requirements')) {
+            errorMessage.textContent = 'Yêu cầu kết nối HTTPS. Ứng dụng này chỉ hoạt động trên HTTPS vì lý do bảo mật.';
+          } else if (error.message && error.message.includes('Invalid secret')) {
+            errorMessage.textContent = 'Vui lòng nhập khóa OTP 2FA đúng định dạng';
+          } else {
+            errorMessage.textContent = 'Đã xảy ra lỗi. Vui lòng kiểm tra khóa bí mật và thử lại.';
+          }
+          errorMessage.classList.add("show");
+        }
+      }
+
+      async function update(secret, index) {
+        try {
+          const codeElement = document.getElementById(`code-${index}`);
+          const timerElement = document.getElementById(`timer-${index}`);
+          const progressElement = document.getElementById(`progress-${index}`);
+
+          if (!codeElement || !timerElement || !progressElement) {
+            return;
+          }
+
+          const timeLeft = 30 - (Math.floor(Date.now() / 1000) % 30);
+          timerElement.innerText = timeLeft;
+
+          // stroke-dashoffset: 0 = full circle, TIMER_CIRCUMFERENCE = empty circle
+          const offset = TIMER_CIRCUMFERENCE * (1 - timeLeft / 30);
+          progressElement.style.strokeDashoffset = offset;
+
+          if (
+            timeLeft === 30 ||
+            codeElement.innerText === "━━━━━━"
+          ) {
+            const code = await generateTOTP(secret);
+            codeElement.innerText = code;
+          }
+        } catch (error) {
+          console.error("Error generating TOTP:", error);
+          const secretId = `secret-${index}`;
+          if (intervals[secretId]) {
+            clearInterval(intervals[secretId]);
+            delete intervals[secretId];
+          }
+          const codeElement = document.getElementById(`code-${index}`);
+          if (codeElement) {
+            codeElement.innerText = "━━━━━━";
+          }
+        }
+      }
+
+      async function copyCode(index) {
+        const codeElement = document.getElementById(`code-${index}`);
+        if (!codeElement) return;
+
+        const code = codeElement.innerText;
+
+        if (code === "━━━━━━" || !code || code.length !== 6) {
+          return;
+        }
+
+        const hasClipboardAPI = navigator.clipboard && navigator.clipboard.writeText;
+        const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+        try {
+          if (hasClipboardAPI && isSecureContext) {
+            await navigator.clipboard.writeText(code);
+          } else {
+            const textArea = document.createElement("textarea");
+            textArea.value = code;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+              const successful = document.execCommand("copy");
+              if (!successful) {
+                throw new Error('execCommand copy failed');
+              }
+            } catch (err) {
+              console.error("Failed to copy code:", err);
+              showCustomModal('Thông báo', 'Không thể sao chép mã. Mã: ' + code, '⚠️');
+              document.body.removeChild(textArea);
+              return;
+            }
+
+            document.body.removeChild(textArea);
+          }
+
+          codeElement.classList.add("copied");
+
+          setTimeout(() => {
+            codeElement.classList.remove("copied");
+          }, 1000);
+
+        } catch (err) {
+          console.error("Failed to copy code:", err);
+          showCustomModal('Thông báo', 'Không thể sao chép mã. Mã: ' + code, '⚠️');
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        const hasCrypto = typeof crypto !== 'undefined' && crypto.subtle;
+
+        if (!isSecureContext) {
+          const infoBox = document.querySelector('.info-box .info-text');
+          if (infoBox) {
+            infoBox.innerHTML = '<span class="info-icon">⚠</span> <strong style="color: #e53e3e;">Yêu cầu kết nối HTTPS.</strong> Ứng dụng này chỉ hoạt động trên HTTPS vì lý do bảo mật.';
+          }
+        } else if (!hasCrypto) {
+          const infoBox = document.querySelector('.info-box .info-text');
+          if (infoBox) {
+            infoBox.innerHTML = '<span class="info-icon">⚠</span> Trình duyệt không hỗ trợ chức năng mã hóa. Vui lòng sử dụng trình duyệt mới nhất.';
+          }
+        }
+
+        const secretInput = document.getElementById("secret");
+
+        secretInput.addEventListener("paste", function() {
+          setTimeout(function() {
+            const inputValue = secretInput.value.trim();
+            if (!inputValue) return;
+
+            const secrets = parseSecrets(inputValue);
+            const hasValidSecret = secrets.some(secret => isValidBase32(secret));
+
+            if (hasValidSecret) {
+              start();
+            }
+          }, 10);
+        });
+      });
+
+    </script>
+
+  </body>
+
+</html>
