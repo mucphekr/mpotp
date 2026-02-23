@@ -1090,23 +1090,39 @@
         }
         const index = parseInt(indexMatch[1], 10);
 
+        // Lấy đúng secret cần xóa trước khi xóa (để tìm đúng dòng trong ô nhập)
+        const secretToRemove = activeSecrets[secretId];
+        if (typeof secretToRemove !== 'string') {
+          delete activeSecrets[secretId];
+          const codeDisplay = document.getElementById(`code-display-${index}`);
+          if (codeDisplay) codeDisplay.remove();
+          if (intervals[secretId]) {
+            clearInterval(intervals[secretId]);
+            delete intervals[secretId];
+          }
+          return;
+        }
+
         if (intervals[secretId]) {
           clearInterval(intervals[secretId]);
           delete intervals[secretId];
         }
 
-        // Chỉ xóa đúng dòng 2FA tương ứng trong ô nhập (giữ nguyên thứ tự như parseSecrets)
+        // Xóa đúng dòng có nội dung trùng secret (so khớp theo giá trị, không theo index)
         const secretInput = document.getElementById("secret");
         if (secretInput) {
           const rawSegments = secretInput.value.split(/[\n,;]/).map(function(s) { return s.trim(); });
-          const normalizedIndices = [];
+          const normalizedToRemove = secretToRemove.toUpperCase().replace(/\s/g, '');
+          let removed = false;
           for (let j = 0; j < rawSegments.length; j++) {
             const n = rawSegments[j].toUpperCase().replace(/\s/g, '');
-            if (n.length > 0) normalizedIndices.push(j);
+            if (n.length > 0 && n === normalizedToRemove) {
+              rawSegments[j] = "";
+              removed = true;
+              break;
+            }
           }
-          if (index >= 0 && index < normalizedIndices.length) {
-            const removeAt = normalizedIndices[index];
-            rawSegments[removeAt] = "";
+          if (removed) {
             secretInput.value = rawSegments
               .filter(function(s) { return s.length > 0; })
               .join("\n")
