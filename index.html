@@ -1095,20 +1095,33 @@
           delete intervals[secretId];
         }
 
+        // Chỉ xóa đúng dòng 2FA tương ứng trong ô nhập (giữ nguyên thứ tự như parseSecrets)
+        const secretInput = document.getElementById("secret");
+        if (secretInput) {
+          const rawSegments = secretInput.value.split(/[\n,;]/).map(function(s) { return s.trim(); });
+          const normalizedIndices = [];
+          for (let j = 0; j < rawSegments.length; j++) {
+            const n = rawSegments[j].toUpperCase().replace(/\s/g, '');
+            if (n.length > 0) normalizedIndices.push(j);
+          }
+          if (index >= 0 && index < normalizedIndices.length) {
+            const removeAt = normalizedIndices[index];
+            rawSegments[removeAt] = "";
+            secretInput.value = rawSegments
+              .filter(function(s) { return s.length > 0; })
+              .join("\n")
+              .trim();
+          }
+          secretInput.classList.remove("error");
+        }
+        document.getElementById("error-message").classList.remove("show");
+
         delete activeSecrets[secretId];
 
         const codeDisplay = document.getElementById(`code-display-${index}`);
         if (codeDisplay) {
           codeDisplay.remove();
         }
-
-        // Xóa luôn ô nhập 2FA khi bấm X
-        const secretInput = document.getElementById("secret");
-        if (secretInput) {
-          secretInput.value = "";
-          secretInput.classList.remove("error");
-        }
-        document.getElementById("error-message").classList.remove("show");
       }
 
       async function start() {
