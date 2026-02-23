@@ -1101,6 +1101,14 @@
         if (codeDisplay) {
           codeDisplay.remove();
         }
+
+        // Xóa luôn ô nhập 2FA khi bấm X
+        const secretInput = document.getElementById("secret");
+        if (secretInput) {
+          secretInput.value = "";
+          secretInput.classList.remove("error");
+        }
+        document.getElementById("error-message").classList.remove("show");
       }
 
       async function start() {
