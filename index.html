@@ -19,83 +19,120 @@
       }
 
       body {
-        background: #111;
+        background:
+          radial-gradient(circle at 20% 0%, rgba(74, 144, 226, 0.22), transparent 34%),
+          radial-gradient(circle at 90% 8%, rgba(72, 187, 120, 0.14), transparent 28%),
+          #101318;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         min-height: 100vh;
-        padding: 20px;
+        width: 100%;
+        min-width: 0;
+        overflow-x: hidden;
+        padding: clamp(10px, 2.8vw, 18px);
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        color: #e0e0e0;
+        color: #e8edf5;
       }
 
       .container {
         width: 100%;
-        max-width: 420px;
+        max-width: min(100%, 820px);
+        min-width: 0;
       }
 
       .card {
-        background: #1a1a1a;
-        padding: 25px 20px;
-        border-radius: 12px;
+        background: rgba(20, 24, 31, 0.96);
+        width: 100%;
+        min-width: 0;
+        padding: clamp(16px, 3.2vw, 24px);
+        border-radius: 8px;
         text-align: center;
-        border: 1px solid #2a2a2a;
+        border: 1px solid rgba(134, 151, 176, 0.18);
+        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.32);
       }
 
       .header {
-        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
+        text-align: left;
+      }
+
+      .app-mark {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #4A90E2, #48bb78);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.4px;
+        flex-shrink: 0;
       }
 
       h1 {
-        font-size: 20px;
-        color: #e0e0e0;
-        margin-bottom: 6px;
+        font-size: 21px;
+        color: #f4f7fb;
+        margin-bottom: 4px;
         font-weight: 700;
+        line-height: 1.2;
       }
 
       .subtitle {
-        color: #888;
-        font-size: 12px;
+        color: #9aa6b7;
+        font-size: 13px;
         line-height: 1.4;
       }
 
       .input-group {
-        margin-bottom: 18px;
+        margin-bottom: 14px;
         text-align: left;
       }
 
       label {
         display: block;
-        color: #888;
+        color: #b1bccb;
         font-size: 13px;
         font-weight: 600;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
       }
 
       input, textarea {
         width: 100%;
-        padding: 10px 12px;
+        max-width: 100%;
+        min-width: 0;
+        padding: 12px 13px;
         border-radius: 8px;
-        border: 1px solid #333;
+        border: 1px solid #2d3748;
         font-size: 14px;
         font-family: inherit;
         resize: vertical;
-        background: #222;
-        color: #e0e0e0;
+        background: #111820;
+        color: #edf2f7;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
       }
 
       textarea {
-        min-height: 70px;
+        min-height: 88px;
         line-height: 1.5;
+        overflow: auto;
       }
 
       input:focus, textarea:focus {
         outline: none;
         border-color: #4A90E2;
+        background: #131c26;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.16);
       }
 
       input::placeholder, textarea::placeholder {
-        color: #555;
+        color: #657386;
       }
 
       input.error, textarea.error {
@@ -105,8 +142,8 @@
       .error-message {
         color: #e53e3e;
         font-size: 13px;
-        margin-top: -20px;
-        margin-bottom: 15px;
+        margin-top: -4px;
+        margin-bottom: 12px;
         text-align: left;
         display: none;
       }
@@ -124,8 +161,10 @@
         color: white;
         font-weight: 600;
         font-size: 14px;
+        font-family: inherit;
         cursor: pointer;
         margin-bottom: 20px;
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       }
 
       button:hover {
@@ -136,33 +175,92 @@
         background: #2d6bb5;
       }
 
+      button:focus-visible {
+        outline: 2px solid rgba(74, 144, 226, 0.8);
+        outline-offset: 2px;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      .actions-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(110px, 0.32fr);
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .actions-row button {
+        margin-bottom: 0;
+        min-height: 44px;
+      }
+
+      .primary-btn {
+        box-shadow: 0 12px 28px rgba(74, 144, 226, 0.24);
+      }
+
+      .clear-all-btn {
+        width: 100%;
+        min-width: 0;
+        background: rgba(229, 62, 62, 0.1);
+        color: #feb2b2;
+        border: 1px solid rgba(229, 62, 62, 0.34);
+      }
+
+      .clear-all-btn:hover {
+        background: rgba(229, 62, 62, 0.18);
+        border-color: rgba(229, 62, 62, 0.55);
+      }
+
       .codes-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+        gap: 12px;
+        margin-bottom: 18px;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .codes-container.is-empty {
+        margin-bottom: 18px;
+      }
+
+      .empty-state {
+        grid-column: 1 / -1;
+        border: 1px dashed rgba(154, 166, 183, 0.28);
+        border-radius: 8px;
+        padding: 16px 14px;
+        color: #8d99aa;
+        font-size: 13px;
+        line-height: 1.5;
+        background: rgba(17, 24, 32, 0.72);
       }
 
       .code-display {
-        background: #222;
+        background: #111820;
         border-radius: 8px;
-        padding: 10px 8px;
+        padding: 13px;
         overflow: hidden;
         box-sizing: border-box;
         position: relative;
-        border: 1px solid #333;
+        border: 1px solid #2d3748;
+        width: 100%;
+        min-width: 0;
       }
 
       .code-item-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 10px;
         margin-bottom: 6px;
       }
 
       .code-item-label {
         font-size: 10px;
-        color: #888;
+        color: #9aa6b7;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -171,17 +269,18 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-width: calc(100% - 26px);
+        max-width: 100%;
+        min-width: 0;
       }
 
       .remove-btn {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         border-radius: 4px;
         border: none;
-        background: #e53e3e;
-        color: white;
-        font-size: 12px;
+        background: rgba(229, 62, 62, 0.12);
+        color: #feb2b2;
+        font-size: 16px;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -192,19 +291,21 @@
       }
 
       .remove-btn:hover {
-        background: #c53030;
+        background: rgba(229, 62, 62, 0.25);
       }
 
       .code-label-wrapper {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 8px 12px;
         margin-bottom: 6px;
       }
 
       .code-label {
         font-size: 10px;
-        color: #888;
+        color: #9aa6b7;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -217,16 +318,16 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        margin-bottom: 8px;
+        margin-bottom: 2px;
         flex-wrap: wrap;
         max-width: 100%;
       }
 
       .code {
-        font-size: 24px;
-        letter-spacing: 3px;
+        font-size: 28px;
+        letter-spacing: 4px;
         font-weight: 700;
-        color: #e0e0e0;
+        color: #f7fafc;
         font-family: "Courier New", monospace;
         line-height: 1;
         display: inline-block;
@@ -251,11 +352,12 @@
         justify-content: flex-end;
         gap: 6px;
         flex-shrink: 0;
+        margin-left: auto;
       }
 
       .timer-label {
         font-size: 11px;
-        color: #888;
+        color: #9aa6b7;
       }
 
       .timer-circle {
@@ -266,7 +368,7 @@
 
       .timer-bg {
         fill: none;
-        stroke: #333;
+        stroke: #2d3748;
         stroke-width: 2.5;
       }
 
@@ -291,16 +393,16 @@
       }
 
       .info-box {
-        background: #222;
+        background: rgba(72, 187, 120, 0.08);
         border-radius: 8px;
-        padding: 15px;
-        margin-top: 20px;
-        border: 1px solid #333;
+        padding: 13px 14px;
+        margin-top: 0;
+        border: 1px solid rgba(72, 187, 120, 0.18);
       }
 
       .info-text {
         font-size: 13px;
-        color: #888;
+        color: #a6b2c2;
         line-height: 1.6;
       }
 
@@ -308,7 +410,7 @@
         display: inline-block;
         width: 18px;
         height: 18px;
-        background: #4A90E2;
+        background: #48bb78;
         color: white;
         border-radius: 50%;
         text-align: center;
@@ -320,15 +422,16 @@
 
       .creator-note {
         text-align: center;
-        margin-top: 30px;
-        padding: 15px;
-        font-size: 14px;
-        color: #888;
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(134, 151, 176, 0.14);
+        font-size: 13px;
+        color: #9aa6b7;
       }
 
       .guide-link {
         display: block;
-        margin-top: 10px;
+        margin-top: 8px;
         color: #4A90E2;
         text-decoration: none;
         font-weight: 600;
@@ -636,6 +739,37 @@
         }
       }
 
+      @media (max-width: 560px) {
+        body {
+          align-items: flex-start;
+        }
+
+        .card {
+          padding: 16px;
+        }
+
+        .header {
+          align-items: flex-start;
+        }
+
+        .actions-row {
+          grid-template-columns: 1fr;
+        }
+
+        .clear-all-btn {
+          width: 100%;
+        }
+
+        .code-label-wrapper {
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .code {
+          font-size: 26px;
+        }
+      }
+
     </style>
 
   </head>
@@ -797,13 +931,17 @@
 
         <div class="header">
 
-          <h1>Nhận mã xác thực Google OTP</h1>
+          <div class="app-mark">2FA</div>
 
-          <p class="subtitle">Xác minh mã Google OTP an toàn</p>
+          <div>
+
+            <h1>Nhận mã Google OTP</h1>
+
+            <p class="subtitle">Xác minh mã Google OTP an toàn</p>
+
+          </div>
 
         </div>
-
-
 
         <div class="input-group">
 
@@ -827,11 +965,21 @@
 
 
 
-        <button onclick="start()">Xác nhận mã xác thực</button>
+        <div class="actions-row">
+
+          <button type="button" class="primary-btn" onclick="start()">Xác nhận mã xác thực</button>
+
+          <button type="button" class="clear-all-btn" onclick="clearAllData(this)">Xóa tất cả</button>
+
+        </div>
 
 
 
-        <div class="codes-container" id="codes-container"></div>
+        <div class="codes-container is-empty" id="codes-container">
+
+          <div class="empty-state">Chưa có mã nào. Dán một hoặc nhiều khóa 2FA để tạo mã xác thực.</div>
+
+        </div>
 
 
 
@@ -844,7 +992,6 @@
             Mã sẽ tự động làm mới sau mỗi 30 giây.
 
           </div>
-
 
         </div>
 
@@ -919,6 +1066,70 @@
 
       let intervals = {};
       let activeSecrets = {};
+      let resizeTimer = null;
+
+      function initializeNeutralinoApi(retries = 8) {
+        if (
+          window.Neutralino &&
+          typeof window.Neutralino.init === "function" &&
+          !window.__neutralinoOtpInitialized
+        ) {
+          try {
+            window.Neutralino.init();
+            window.__neutralinoOtpInitialized = true;
+          } catch (error) {
+            console.warn("Could not initialize Neutralino API:", error);
+          }
+        }
+
+        if (!window.Neutralino && retries > 0) {
+          setTimeout(() => initializeNeutralinoApi(retries - 1), 100);
+        }
+      }
+
+      function getPreferredWindowHeight() {
+        const container = document.querySelector(".container");
+        if (!container) return 540;
+
+        const containerHeight = container.getBoundingClientRect().height;
+        const pagePadding = 36;
+        const windowFrame = Math.max(0, window.outerHeight - window.innerHeight);
+        const screenLimit = Math.max(520, (window.screen && window.screen.availHeight ? window.screen.availHeight : 900) - 32);
+
+        return Math.round(Math.min(screenLimit, Math.max(430, containerHeight + pagePadding + windowFrame)));
+      }
+
+      async function resizeAppWindow() {
+        const neutralinoWindow = window.Neutralino && window.Neutralino.window;
+        if (!neutralinoWindow || typeof neutralinoWindow.setSize !== "function") {
+          return;
+        }
+
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(async () => {
+          try {
+            if (
+              typeof neutralinoWindow.isMaximized === "function" &&
+              await neutralinoWindow.isMaximized()
+            ) {
+              return;
+            }
+
+            let width = 500;
+            if (typeof neutralinoWindow.getSize === "function") {
+              const currentSize = await neutralinoWindow.getSize();
+              width = Math.max(400, currentSize.width || width);
+            }
+
+            await neutralinoWindow.setSize({
+              width,
+              height: getPreferredWindowHeight()
+            });
+          } catch (error) {
+            console.warn("Could not resize app window:", error);
+          }
+        }, 80);
+      }
 
       function checkSecurityRequirements() {
         const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -1025,9 +1236,68 @@
       // r=13 => circumference = 2 * PI * 13 = 81.68
       const TIMER_CIRCUMFERENCE = 2 * Math.PI * 13;
 
+      function showEmptyState() {
+        const container = document.getElementById("codes-container");
+        if (!container) return;
+
+        container.innerHTML = '<div class="empty-state">Chưa có mã nào. Dán một hoặc nhiều khóa 2FA để tạo mã xác thực.</div>';
+        container.classList.add("is-empty");
+        resizeAppWindow();
+      }
+
+      function hideEmptyState() {
+        const container = document.getElementById("codes-container");
+        if (!container) return;
+
+        const emptyState = container.querySelector(".empty-state");
+        if (emptyState) {
+          emptyState.remove();
+        }
+        container.classList.remove("is-empty");
+        resizeAppWindow();
+      }
+
+      function clearOtpIntervals() {
+        Object.values(intervals).forEach(interval => clearInterval(interval));
+        intervals = {};
+      }
+
+      function clearAllData(btnElement) {
+        clearOtpIntervals();
+        activeSecrets = {};
+
+        const secretInput = document.getElementById("secret");
+        const errorMessage = document.getElementById("error-message");
+
+        if (secretInput) {
+          secretInput.value = "";
+          secretInput.classList.remove("error");
+          secretInput.focus();
+        }
+
+        if (errorMessage) {
+          errorMessage.classList.remove("show");
+        }
+
+        showEmptyState();
+
+        if (btnElement) {
+          const originalHTML = btnElement.innerHTML;
+          btnElement.textContent = "Đã xóa";
+          btnElement.disabled = true;
+
+          setTimeout(() => {
+            btnElement.innerHTML = originalHTML;
+            btnElement.disabled = false;
+          }, 1000);
+        }
+      }
+
       function createCodeDisplay(secret, index) {
         const container = document.getElementById("codes-container");
         const secretId = `secret-${index}`;
+
+        hideEmptyState();
 
         const codeDisplay = document.createElement("div");
         codeDisplay.className = "code-display";
@@ -1080,6 +1350,7 @@
         });
 
         activeSecrets[secretId] = secret;
+        resizeAppWindow();
       }
 
       function removeSecret(secretId) {
@@ -1099,6 +1370,11 @@
           if (intervals[secretId]) {
             clearInterval(intervals[secretId]);
             delete intervals[secretId];
+          }
+          if (Object.keys(activeSecrets).length === 0) {
+            showEmptyState();
+          } else {
+            resizeAppWindow();
           }
           return;
         }
@@ -1137,6 +1413,12 @@
         const codeDisplay = document.getElementById(`code-display-${index}`);
         if (codeDisplay) {
           codeDisplay.remove();
+        }
+
+        if (Object.keys(activeSecrets).length === 0) {
+          showEmptyState();
+        } else {
+          resizeAppWindow();
         }
       }
 
@@ -1188,12 +1470,12 @@
           return;
         }
 
-        Object.values(intervals).forEach(interval => clearInterval(interval));
-        intervals = {};
+        clearOtpIntervals();
         activeSecrets = {};
 
         const container = document.getElementById("codes-container");
         container.innerHTML = "";
+        container.classList.remove("is-empty");
 
         try {
           for (let i = 0; i < validSecrets.length; i++) {
@@ -1208,6 +1490,7 @@
               update(secret, i);
             }, 1000);
           }
+          resizeAppWindow();
         } catch (error) {
           console.error('Error in start():', error);
           secretInput.classList.add("error");
@@ -1314,6 +1597,8 @@
       }
 
       document.addEventListener("DOMContentLoaded", function() {
+        initializeNeutralinoApi();
+
         const isSecureContext = window.isSecureContext || location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
         const hasCrypto = typeof crypto !== 'undefined' && crypto.subtle;
 
@@ -1344,6 +1629,8 @@
             }
           }, 10);
         });
+
+        setTimeout(resizeAppWindow, 120);
       });
 
     </script>
